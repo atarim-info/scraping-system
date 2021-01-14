@@ -1,5 +1,6 @@
 var createError = require('http-errors');
 var express = require('express');
+var bodyParser = require('body-parser');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
@@ -12,23 +13,47 @@ var app = express();
 const dotenv = require('dotenv');
 dotenv.config();
 const PORT = process.env.PORT || 5000;
+const DB_URI = process.env.DB_URI;
 
 // Enables CORS
 const cors = require('cors');
 app.use(cors({ origin: true }));
+
+const mongoose = require('mongoose');
+const {WebPageRecord} = require("./db/webPageRecordModel");
+const {scraperFileReader, scraperLinksReader} = require('./libs/scraper');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
 app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+// app.use(express.json());
+// app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json());
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+
+app.post('/parse', (req, res) => {
+  const body = req.body;
+  const url = body.url
+  console.log("in \\parse url = " + url);
+  const html = scraperFileReader(url);
+  const links = scraperLinksReader(html);
+  const webPage = new WebPageRecord({
+    url: "http//localhost:8000/a",
+    page: html,
+    timestamp: Date.now(),
+  });
+
+  webPage.save(webPage)
+      .then((savedWebPage) => res.status(201).send(savedWebPage))
+      .catch((err) => res.status(400).send(err));
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -46,28 +71,11 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-app.post('/parse', (req, res) => {
-  const body = req.body;
-  const html = scraperFileReader("http://localhost:8000");
 
-  const webPage = new WebPageRecord({
-    url: body.url,
-    html: html,
-    timestamp: Date.now(),
-  });
-
-  webPage.save(webPage)
-      .then((savedWebPage) => res.status(201).send(savedWebPage))
-      .catch((err) => res.status(400).send(err));
-});
-
-const mongoose = require('mongoose');
-const {WebPageRecord} = require("./db/webPageRecordModel");
-const DB_URI = process.env.DB_URI;
 
 mongoose.connect(DB_URI).then(() => {
   console.log('Listening on port: ' + PORT);
-  app.listen(PORT);
+  // app.listen(PORT);
 });
 
 module.exports = app;
