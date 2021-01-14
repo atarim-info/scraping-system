@@ -47,7 +47,8 @@ app.post('/parse', (req, res) => {
   const webPage = new WebPageRecord({
     url: "http//localhost:8000/a",
     page: html,
-    timestamp: Date.now(),
+    links: links,
+    timestamp: Date.now()
   });
 
   webPage.save(webPage)

@@ -10,6 +10,7 @@ const webPageSchema = new mongoose.Schema({
         type: String,
         required: false,
     },
+    links: [ String ],
     timestamp: {
         type: Date,
         required: true,

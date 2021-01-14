@@ -10,10 +10,10 @@ const scraperFileReader = ( url ) => {
 const scraperLinksReader = ( html ) => {
     console.log("in scraperLinksReader \n" + html);
     const links =  [
-            {url: 'http://www.aaaa.com'},
-            {url: 'http://www.bbbb.com'},
-            {url: 'http://www.cccc.com'},
-            {url: 'http://www.dddd.com'}
+            'http://www.aaaa.com',
+            'http://www.bbbb.com',
+            'http://www.cccc.com',
+            'http://www.dddd.com'
         ];
     return links;
 }
