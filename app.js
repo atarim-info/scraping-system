@@ -62,7 +62,7 @@ app.post('/parse', (req, res) => {
 });
 
 const mongoose = require('mongoose');
-const {WebPageRecord} = require("./webPageRecordModel");
+const {WebPageRecord} = require("./db/webPageRecordModel");
 const DB_URI = process.env.DB_URI;
 
 mongoose.connect(DB_URI).then(() => {
