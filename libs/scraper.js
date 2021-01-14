@@ -18,5 +18,27 @@ const scraperLinksReader = ( html ) => {
     return links;
 }
 
-exports.scraperFileReader = scraperFileReader;
-exports.scraperLinksReader = scraperLinksReader;
+const scraperFileReaderAsync = async (url) => {
+    return new Promise((resolve, reject) => {
+        try {
+            const html = scraperFileReader(url);
+            resolve(html);
+        } catch (e) {
+            reject(e.message);
+        }
+    });
+}
+
+const scraperLinksReaderAsync = async (html) => {
+    return new Promise((resolve, reject) => {
+
+        try {
+            const links = scraperLinksReader(html);
+            resolve(links);
+        } catch (e) {
+            reject(e.message);
+        }
+    });
+}
+
+module.exports = { scraperFileReaderAsync, scraperLinksReaderAsync, scraperFileReader, scraperLinksReader };

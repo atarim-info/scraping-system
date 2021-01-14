@@ -6,6 +6,7 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "@jest/globals": "^26.6.2",
     "async": "^3.2.0",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
