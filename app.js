@@ -41,11 +41,11 @@ app.use('/users', usersRouter);
 app.post('/parse', (req, res) => {
   const body = req.body;
   const url = body.url
-  console.log("in \\parse url = " + url);
+  console.log("in /parse body.url = " + url);
   const html = scraperFileReader(url);
   const links = scraperLinksReader(html);
   const webPage = new WebPageRecord({
-    url: "http//localhost:8000/a",
+    url: url,
     page: html,
     links: links,
     timestamp: Date.now()
@@ -59,13 +59,13 @@ app.post('/parse', (req, res) => {
 app.post('/parse_async', (req, res) => {
   const body = req.body;
   const url = body.url
-  console.log("in \\parse url = " + url);
+  console.log("in /parse_async body.url = " + url);
   scraperFileReaderAsync(url)
       .then((html) => {
           scraperLinksReaderAsync(html)
               .then((links) => {
                   const webPage = new WebPageRecord({
-                    url: "http//localhost:8000/a",
+                    url: url,
                     page: html,
                     links: links,
                     timestamp: Date.now()
